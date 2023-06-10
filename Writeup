@@ -1,0 +1,74 @@
+Andrew Spurling
+Professor Conrad
+CIS-11
+Friday, June 9, 2023
+Project: Street Crossing
+
+1.	Overview: This project applies assembly programming principles to simulate a pedestrian crosswalk scenario. The focus is on programming indicator lights for traffic control to enhance pedestrian safety.
+
+2.	Objective: The primary goal is to program indicator lights that provide a safe, timed signal to pedestrians. The lights should indicate when it is safe to cross and also flash a warning as the crossing period nears its end. The program must also offer the flexibility to stop the simulation on command while continuing to run the signal routine.
+
+3.	Implementation: This project requires a Raspberry Pi and a Bridge (or "Cobbler") connected to a breadboard. Although the hardware component pins may vary, they can be easily adjusted in the code header.
+a.	Execution Steps: 
+i.	Set up hardware as outlined in section 4a, and as illustrated in the attached images/diagrams. 
+ii.	Ensure the GPIO software is installed.
+iii.	Run the makefile using the '-lwiringPi' command line.  \
+iv.	Execute the program.
+v.	Press the 'Walk' button to initiate the indicator light routine (can be repeated as often as desired without exiting the program). 
+vi.	Press 'Off' to exit the program and end the simulation.
+
+4.	Additional Details:
+a.	Hardware Requirements: 
+i.	Raspberry Pi 4B, Revision 05 (8GB) 
+ii.	40-Pin Cable 
+iii.	Breadboard 
+iv.	Cobbler 
+v.	6 LEDs 
+vi.	2 Buttons 
+vii.	8 Resistors (220R) 
+viii.	Extra wires as required. 
+b.	Programming Notes:
+i.	The program comprises ARM assembly language and a C++ header file ('wiringPi.h') for calling GPIO functions. 
+ii.	Key values such as delay times for various stages of lights, warning blinks frequency for crosswalk, or pin number assignments can be easily modified at the start of the program. 
+iii.	GPIO version number: 2.52. 
+iv.	The program continues to run until the off switch is pressed. If any indicator lights remain on due to an error, restart the program and press only the off switch.
+
+5.	Enclosed Materials:
+a.	Psuedocode:
+i. Define constants for I/O, levels, times, quantities, and pin numbers.
+ii. Align memory by 4 bytes.
+iii. Begin main program:
+     a. Save link register to stack.
+     b. Call setup function for hardware I/O modes:
+        - Set traffic lights as output.
+        - Set walk lights as output.
+        - Set buttons as input.
+     c. Clear previous states and set lights to default:
+        - Turn on Green Traffic Light and Red Walk Signal.
+        - Turn off all other signals.
+     d. Begin continuous state machine loop:
+        - Check if the 'Off' switch has been pressed, if yes, shut down the lights and end the program.
+        - Check if the 'Walk' switch has been pressed, if yes, run the signal routine.
+        - Repeat this loop indefinitely until one of the buttons is pressed.
+     e. On 'Walk' switch activation:
+        - Start initial delay before the light cycle.
+        - Transition traffic lights from Green to Yellow.
+        - Hold Yellow light for a specified duration.
+        - Transition Yellow Traffic Light to Red.
+        - Delay between Red light and Walk signal going Green for safety.
+        - Activate Walk signal.
+        - Keep Walk signal on for a specified time to cross.
+        - Start blinking loop (seven times):
+          -- Turn off both Walk signals.
+          -- Pause for blink delay.
+          -- Turn on both Walk signals.
+          -- Pause for blink delay.
+        - End blinking loop.
+        - Transition Walk signal from Green to Red.
+        - Delay between Red light and traffic going Green for safety.
+        - Transition Red Traffic Light to Green.
+     f. Return to the state machine loop.
+     g. On 'Off' switch activation:
+        - Turn off Green Traffic Light and Red Walk Signal.
+        - Exit program.
+
